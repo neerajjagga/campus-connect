@@ -31,6 +31,7 @@ app.use(cors({
 
 
 const PORT = process.env.PORT || 3000;
+const __dirname = path.resolve();
 
 app.use('/api/events', eventRouter);
 app.use('/api/auth', userRouter);

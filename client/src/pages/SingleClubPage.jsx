@@ -119,10 +119,10 @@ const SingleClubPage = () => {
                           </>
                         )}
                       </button>
-                      <button onClick={() => setShowSelectChatAdminModal((prev) => !prev)} className="px-4 py-2 text-sm font-semibold rounded-md flex items-center gap-2 border-2 bg-primary-500 text-white border-primary-500 hover:bg-primary-300 hover:border-primary-300">
+                      {/* <Link to={''} className="px-4 py-2 text-sm font-semibold rounded-md flex items-center gap-2 border-2 bg-primary-500 text-white border-primary-500 hover:bg-primary-300 hover:border-primary-300">
                         <MessageCircle className="size-5" />
                         <span>Chat</span>
-                      </button>
+                      </Link> */}
                     </div>
                   </div>
                   <p className="text-gray-700 text-md leading-relaxed">
