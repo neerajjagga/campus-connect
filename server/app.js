@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import logger from "morgan";
+import path from "path";
 dotenv.config();
 
 import { initializeSocket } from './lib/socket.js';
