@@ -24,14 +24,10 @@ app.use(express.json({
 }));
 app.use(cookieParser());
 app.use(cors({
-    origin : "http://localhost:5173",
+    origin : "http://localhost:3000",
     credentials : true
 }));
 
-app.use(cors({
-    origin : "http://localhost:5173",
-    credentials : true
-}));
 
 const PORT = process.env.PORT || 3000;
 
@@ -40,6 +36,13 @@ app.use('/api/auth', userRouter);
 app.use('/api/subscribe', subscribeRouter);
 app.use('/api/clubs', clubRouter);
 app.use('/api/messages', messageRouter);
+
+if (process.env.NODE_ENV === "production") {
+	app.use(express.static(path.join(__dirname, "../client/dist")));
+	app.get("*", (req, res) => {
+		res.sendFile(path.resolve(__dirname, "../client", "dist", "index.html"));
+	});
+}
 
 connectDB().then(() => {
     server.listen(PORT, async () => {

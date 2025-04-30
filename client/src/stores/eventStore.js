@@ -16,7 +16,7 @@ const useEventStore = create((set) => ({
   getEvents: async () => {
     set({ isEventsFetched: false });
     try {
-      const res = await axiosInstance.get("/api/events");
+      const res = await axiosInstance.get("/events");
       set({ events: res.data.events, isEventsFetched: true });
     } catch (error) {
       toast.error(error.response.data.message);
@@ -27,7 +27,7 @@ const useEventStore = create((set) => ({
   getSingleEvent: async (eventId) => {
     set({ isEventFetched: false });
     try {
-      const res = await axiosInstance.get(`/api/events/${eventId}`);
+      const res = await axiosInstance.get(`/events/${eventId}`);
       set({ event: res.data.event, isEventFetched: true });
     } catch (error) {
       toast.error(error.response.data.message);
@@ -37,7 +37,7 @@ const useEventStore = create((set) => ({
   getUserEvents: async (userId) => {
     set({ isEventsFetched: false });
     try {
-      const res = await axiosInstance.get(`/api/events/user/${userId}`);
+      const res = await axiosInstance.get(`/events/user/${userId}`);
       set({ events: res.data.events, isEventsFetched: true });
     } catch (error) {
       toast.error(error.response.data.message);
@@ -49,7 +49,7 @@ const useEventStore = create((set) => ({
     set({ isCreatingEvent: true });
     console.log(data);
     try {
-      await axiosInstance.post("/api/events", data);
+      await axiosInstance.post("/events", data);
       toast.success("Event Created Success!");
     } catch (error) {
       toast.error(error.response.data.message);
@@ -61,7 +61,7 @@ const useEventStore = create((set) => ({
   deleteEvent: async (eventId) => {
     set({ isDeletingEvent: true });
     try {
-      await axiosInstance.delete(`/api/events/${eventId}`);
+      await axiosInstance.delete(`/events/${eventId}`);
       toast.success("Event Deleted Success!");
     } catch (error) {
       toast.error(error.response.data.message);
@@ -73,7 +73,7 @@ const useEventStore = create((set) => ({
   updateEvent: async (eventId, data) => {
     set({ isUpdatingEvent: true });
     try {
-      await axiosInstance.patch(`/api/events/${eventId}`, data);
+      await axiosInstance.patch(`/events/${eventId}`, data);
       toast.success("Event Updated Success!");
     } catch (error) {
       toast.error(error.response.data.message);

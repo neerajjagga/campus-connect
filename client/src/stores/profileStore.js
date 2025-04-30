@@ -11,7 +11,7 @@ const useProfileStore = create((set) => ({
   getProfile: async () => {
     set({ isProfileFetched: false });
     try {
-      const res = await axiosInstance.get("/api/auth/profile");
+      const res = await axiosInstance.get("/auth/profile");
       set({ profileData: res.data, isProfileFetched: true });
     } catch (error) {
       toast.error(error.response.data.message);
@@ -22,7 +22,7 @@ const useProfileStore = create((set) => ({
   updateProfile: async (data) => {
     set({ isUpdatingProfile: true });
     try {
-      const res = await axiosInstance.post("/api/auth/update-profile", data);
+      const res = await axiosInstance.post("/auth/update-profile", data);
       console.log(res);
       set({ profileData: res.data.profile });
       useAuthStore.getState().setAuthUser(res.data.profile);

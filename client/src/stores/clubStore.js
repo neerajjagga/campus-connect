@@ -16,7 +16,7 @@ const useClubStore = create((set) => ({
 
   getClubs: async () => {
     try {
-      const res = await axiosInstance.get("/api/clubs");
+      const res = await axiosInstance.get("/clubs");
       set({ clubs: res.data.clubs, isClubsFetched: true });
     } catch (error) {
       toast.error(error.response.data.message);
@@ -26,7 +26,7 @@ const useClubStore = create((set) => ({
 
   getSingleClub: async (clubId) => {
     try {
-      const res = await axiosInstance.get(`/api/clubs/${clubId}`);
+      const res = await axiosInstance.get(`/clubs/${clubId}`);
       set({ club: res.data.club, isClubFetched: true });
     } catch (error) {
       toast.error(error.response.data.message);
@@ -36,7 +36,7 @@ const useClubStore = create((set) => ({
   getUserClubs: async (userId) => {
     set({ isClubsFetched: false });
     try {
-      const res = await axiosInstance.get(`/api/clubs/user/${userId}`);
+      const res = await axiosInstance.get(`/clubs/user/${userId}`);
       set({ clubs: res.data.clubs, isClubsFetched: true });
     } catch (error) {
       toast.error(error.response.data.message);
@@ -47,7 +47,7 @@ const useClubStore = create((set) => ({
   createNewClub: async (data) => {
     set({ isCreatingClub: true });
     try {
-      await axiosInstance.post("/api/clubs", data);
+      await axiosInstance.post("/clubs", data);
       toast.success("Club Created Success!");
     } catch (error) {
       toast.error(error.response.data.message);
@@ -59,7 +59,7 @@ const useClubStore = create((set) => ({
   updateClub: async (data, clubId) => {
     set({ isUpdatingClub: true });
     try {
-      await axiosInstance.patch(`/api/clubs/${clubId}`, data);
+      await axiosInstance.patch(`/clubs/${clubId}`, data);
       toast.success("Club Updated Success!");
     } catch (error) {
       toast.error(error.response.data.message);
@@ -71,7 +71,7 @@ const useClubStore = create((set) => ({
   deleteClub: async (clubId) => {
     set({ isDeletingClub: true });
     try {
-      await axiosInstance.delete(`/api/clubs/${clubId}`);
+      await axiosInstance.delete(`/clubs/${clubId}`);
       toast.success("Club Deleted Success!");
     } catch (error) {
       toast.error(error.response.data.message);
@@ -82,7 +82,7 @@ const useClubStore = create((set) => ({
 
   followClub: async (clubId) => {
     try {
-      const res = await axiosInstance.post(`/api/clubs/follow/${clubId}`);
+      const res = await axiosInstance.post(`/clubs/follow/${clubId}`);
       toast.success(res.data.message);
     } catch (error) {
       toast.error(error.response.data.message);
@@ -91,7 +91,7 @@ const useClubStore = create((set) => ({
 
   unfollowClub: async (clubId) => {
     try {
-      const res = await axiosInstance.post(`/api/clubs/unfollow/${clubId}`);
+      const res = await axiosInstance.post(`/clubs/unfollow/${clubId}`);
       toast.success(res.data.message);
     } catch (error) {
       toast.error(error.response.data.message);

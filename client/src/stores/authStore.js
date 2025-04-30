@@ -15,7 +15,7 @@ const useAuthStore = create((set) => ({
   checkAuth: async () => {
     set({ isCheckingAuth: true });
     try {
-      const res = await axiosInstance.get("/api/auth/check");
+      const res = await axiosInstance.get("/auth/check");
       set({ authUser: res.data });
     } catch (error) {
       set({ authUser: null });
@@ -27,7 +27,7 @@ const useAuthStore = create((set) => ({
   login: async (data) => {
     set({ isUserAuthenticating: true });
     try {
-      const res = await axiosInstance.post("/api/auth/login", data);
+      const res = await axiosInstance.post("/auth/login", data);
       set({ authUser: res.data.user });
       toast.success("Login Success!");
     } catch (error) {
@@ -39,7 +39,7 @@ const useAuthStore = create((set) => ({
   signup: async (data) => {
     set({ isUserAuthenticating: true });
     try {
-      const res = await axiosInstance.post("/api/auth/signup", data);
+      const res = await axiosInstance.post("/auth/signup", data);
       set({ authUser: res.data.user });
       toast.success("Account Created Success!");
     } catch (error) {
@@ -51,7 +51,7 @@ const useAuthStore = create((set) => ({
 
   logout: async () => {
     try {
-      await axiosInstance.post("/api/auth/logout");
+      await axiosInstance.post("/auth/logout");
       set({ authUser: null });
       toast.success("Logout Success!");
     } catch (error) {
@@ -61,7 +61,7 @@ const useAuthStore = create((set) => ({
 
   getAdminUsers: async () => {
     try {
-      const res = await axiosInstance.get("/api/auth/admins");
+      const res = await axiosInstance.get("/auth/admins");
       set({ isAdminUsersFetched: true });
       return res.data.adminUsers;
     } catch (error) {
