@@ -19,6 +19,6 @@ subscribeSchema.set("toJSON", {
   versionKey: false,
 });
 
-const Subscribe = new mongoose.model("SubscribedEmail", subscribeSchema);
+const Subscribe = mongoose.model("Subscribe", subscribeSchema);
 
 export default Subscribe;

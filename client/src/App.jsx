@@ -1,8 +1,7 @@
 import React, { useEffect } from "react";
-import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import useAuthStore from "./stores/authStore";
-import usePreviousLocation from "./hooks/usePreviousLocation"; // Import Hook
 
 import HomePage from "./pages/HomePage";
 import CreateEventPage from "./pages/CreateEventPage";
@@ -20,21 +19,15 @@ import EditClubPage from "./pages/EditClubPage";
 import ChatPage from "./pages/ChatPage";
 
 const App = () => {
-  const { isCheckingAuth, authUser, checkAuth, previousLocation } =
-    useAuthStore();
-  const navigate = useNavigate();
-
-  usePreviousLocation();
+  const { isCheckingAuth, authUser, checkAuth } = useAuthStore();
 
   useEffect(() => {
     checkAuth();
   }, []);
 
   useEffect(() => {
-    if (previousLocation) {
-      navigate(previousLocation);
-    }
-  }, [previousLocation]);
+    console.log(isCheckingAuth, authUser);
+  }, [isCheckingAuth]);
 
   if (isCheckingAuth) {
     return (
@@ -66,11 +59,11 @@ const App = () => {
         />
         <Route
           path="/events"
-          element={authUser ? <EventsPage /> : <Navigate to="/login" />}
+          element={!authUser ? <Navigate to="/login" /> : <EventsPage />}
         />
         <Route
           path="/clubs"
-          element={authUser ? <ClubsPage /> : <Navigate to="/login" />}
+          element={!authUser ? <Navigate to="/login" /> : <ClubsPage />}
         />
         <Route
           path="/chat"

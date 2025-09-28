@@ -4,8 +4,21 @@ import Footer from "../components/Footer";
 import { Button } from "../components/ui/button";
 import { Link } from "react-router-dom";
 import { works } from "../utils/constant";
+import { Bell, BellRing, CalendarSearch, Loader2 } from "lucide-react";
+import useAuthStore from "../stores/authStore";
 
 const HomePage = () => {
+  const { authUser, isLoading, subscribeEmail, unsubscribeEmail } =
+    useAuthStore();
+
+  const handleSubscribe = () => {
+    if (authUser.isSubscribed) {
+      unsubscribeEmail();
+    } else {
+      subscribeEmail();
+    }
+  };
+
   return (
     <>
       <Header active="home" />
@@ -23,11 +36,34 @@ const HomePage = () => {
                 campus events, find teammates, and engage with your favorite
                 clubs – all with CampusConnect!
               </p>
-              <a href="/events">
-                <Button className="w-full sm:w-auto rounded-full border-2 border-white bg-white text-primary-500 hover:bg-primary-500 hover:text-white hover:border-primary-500 transition duration-200">
-                  Explore Events
-                </Button>
-              </a>
+              <div className="flex items-center gap-3">
+                <Link to="/events">
+                  <Button className="w-full sm:w-auto rounded-full border-2 border-primary-500 bg-primary-500 text-white hover:bg-white hover:text-primary-500 hover:border-white transition duration-200">
+                    <span>Explore Events</span>
+                    <CalendarSearch className="size-5" />
+                  </Button>
+                </Link>
+                {authUser && (
+                  <Button
+                    onClick={handleSubscribe}
+                    className="w-full min-w-36 sm:w-auto rounded-full border-2 border-primary-500 bg-primary-500 text-white hover:bg-white hover:text-primary-500 hover:border-white transition duration-200"
+                  >
+                    {isLoading ? (
+                      <Loader2 className="size-16 animate-spin" />
+                    ) : authUser.isSubscribed ? (
+                      <>
+                        <span>Subscribed</span>
+                        <BellRing className="size-5" />
+                      </>
+                    ) : (
+                      <>
+                        <span>Subscribe</span>
+                        <Bell className="size-5" />
+                      </>
+                    )}
+                  </Button>
+                )}
+              </div>
             </div>
           </div>
         </section>

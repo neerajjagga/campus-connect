@@ -41,8 +41,8 @@ const Header = ({ active }) => {
         <ul className="hidden gap-4 capitalize text-[0.95rem] md:flex">
           {navLinks.map((link) => (
             <li key={link.id}>
-              <a
-                href={`${link.path}`}
+              <Link
+                to={`${link.path}`}
                 className={`relative group text-black transition duration-200 ${
                   link.label.toLowerCase() === active ? "text-primary-500" : ""
                 } hover:text-primary-500`}
@@ -55,7 +55,7 @@ const Header = ({ active }) => {
                   }`}
                 ></span>
                 {link.label}
-              </a>
+              </Link>
             </li>
           ))}
         </ul>

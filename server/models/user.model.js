@@ -61,6 +61,10 @@ const userSchema = new mongoose.Schema(
         ref: "Club",
       },
     ],
+    isSubscribed: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,

@@ -9,8 +9,6 @@ export const checkAuth = async (req, res, next) => {
   try {
     const { access_token } = req.cookies;
 
-    console.log('Access Token: ', access_token);
-
     if (!access_token) {
       return res.status(401).json({
         message: "Session Expired!",
@@ -39,8 +37,6 @@ export const checkAuth = async (req, res, next) => {
           message: "Unauthorized - User not found",
         });
       }
-
-      console.log(user)
 
       req.user = user;
       next();
