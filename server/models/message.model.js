@@ -1,29 +1,27 @@
 import mongoose from 'mongoose';
 
 const messageSchema = new mongoose.Schema({
-    fromUserId : {
+    senderId : {
         type : mongoose.Schema.Types.ObjectId,
         ref : "User",
         required : true,
     },
-    toUserId : {
+    receiverId : {
         type : mongoose.Schema.Types.ObjectId,
         ref : "User",
         required : true,
     },
-    roomId : {
+    text : {
         type : String,
-        required : true,
+        default: null
     },
-    message : {
-        type : String,
-        required : true,
+    imageUrl: {
+        type: String,
+        default: null
     }
 }, {
     timestamps: true,
 });
-
-messageSchema.index({ createdAt : 1, roomId : 1 });
 
 const Message = mongoose.model("Message", messageSchema);
 

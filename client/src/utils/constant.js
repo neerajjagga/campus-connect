@@ -16,6 +16,11 @@ export const navLinks = [
     label: "Clubs",
     path: "/clubs",
   },
+  {
+    id: 4,
+    label: "Chat",
+    path: "/chat",
+  },
 ];
 
 export const works = [
@@ -45,12 +50,17 @@ export const works = [
 export const dashboardSidebarLabels = [
   {
     id: 1,
-    text: "events"
+    text: "events",
   },
   {
     id: 2,
-    text: "clubs"
-  }
-]
+    text: "clubs",
+  },
+];
 
-export const departments = ["CCT", "CEC", "CCE", "CCP", "CBSA", "CCH", "CCHM"]
+export const departments = ["CCT", "CEC", "CCE", "CCP", "CBSA", "CCH", "CCHM"];
+
+export const chatButtons = [
+  { id: 1, label: "admin" },
+  { id: 2, label: "student" },
+];

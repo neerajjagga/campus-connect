@@ -28,8 +28,10 @@ const useClubStore = create((set) => ({
     try {
       const res = await axiosInstance.get(`/clubs/${clubId}`);
       set({ club: res.data.club, isClubFetched: true });
+      return true;
     } catch (error) {
       toast.error(error.response.data.message);
+      return false;
     }
   },
 

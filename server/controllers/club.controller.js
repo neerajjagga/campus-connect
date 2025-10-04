@@ -155,7 +155,6 @@ export const updateClub = async (req, res) => {
           folder: "club_images",
         });
         data["clubImageUrl"] = uploadRes.secure_url;
-        console.log("New Event Image Uploaded!");
       } catch (error) {
         console.error("Error uploading image:", error);
       }
@@ -171,7 +170,6 @@ export const updateClub = async (req, res) => {
 
         // Delete image from Cloudinary
         await cloudinary.uploader.destroy(publicId);
-        console.log("Old Event Image Deleted!");
       } catch (error) {
         console.error("Error deleting image:", error);
       }
@@ -200,7 +198,6 @@ export const updateClub = async (req, res) => {
     const updatedClub = await Club.findByIdAndUpdate(clubId, data, {
       new: true,
     });
-    console.log(updatedClub);
 
     return res.json({
       success: true,

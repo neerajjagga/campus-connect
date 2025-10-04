@@ -93,11 +93,13 @@ export default {
         "accordion-up": "accordion-up 0.2s ease-out",
       },
       screens: {
-        'lg': { 'min': '869px' },
-        'custom-lg': { 'min': '969px' }
+        "custom-sm": {min: "469px"},
+        "custom-md": {min: "669px"},
+        lg: { min: "869px" },
+        "custom-lg": { min: "969px" },
       },
       boxShadow: {
-        'box': '0px 2px 4px rgba(0, 0, 0, 0.18)',
+        box: "0px 2px 4px rgba(0, 0, 0, 0.18)",
       },
       gridColumn: {
         "span-14": "span 14 / span 14",
@@ -105,8 +107,8 @@ export default {
       },
       display: {
         "webkit-box": "-webkit-box",
-      }
+      },
     },
   },
-  plugins: [],
+  plugins: [require("daisyui")],
 };

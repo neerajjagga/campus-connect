@@ -9,6 +9,7 @@ import {
   storeRefreshToken,
 } from "../utils/user.utils.js";
 import cloudinary from "../lib/cloudinary.js";
+import { sendSubscribedEmail } from "../utils/event.utils.js";
 dotenv.config();
 
 export const signUpUser = async (req, res) => {
@@ -76,7 +77,17 @@ export const loginUser = async (req, res) => {
     const { email, password } = req.body;
 
     // find the user first
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email })
+      .populate({ path: "events" })
+      .populate({ path: "attendedEvents" })
+      .populate({ path: "followingClubs", populate: { path: "events" } })
+      .populate({
+        path: "adminAtClubs",
+        populate: {
+          path: "events",
+        },
+      })
+      .lean();
 
     if (!user)
       return res
@@ -99,7 +110,7 @@ export const loginUser = async (req, res) => {
     setCookies(accessToken, refreshToken, res);
 
     res.status(200).json({
-      user,
+      user: { ...user, password: undefined },
       message: "User loggedIn successfully",
     });
   } catch (error) {
@@ -192,12 +203,14 @@ export const getUserProfile = async (req, res) => {
 
     if (role === "student") {
       const profileData = await User.findOne({ _id: id })
+        .select("-password")
         .populate({ path: "attendedEvents" })
         .populate({ path: "followingClubs", populate: { path: "events" } })
-        .exec();
-      return res.status(200).json({ ...profileData._doc });
+        .lean();
+      return res.status(200).json(profileData);
     } else {
       const profileData = await User.findOne({ _id: id })
+        .select("-password")
         .populate({ path: "events" })
         .populate({ path: "followingClubs", populate: { path: "events" } })
         .populate({
@@ -206,8 +219,8 @@ export const getUserProfile = async (req, res) => {
             path: "events",
           },
         })
-        .exec();
-      return res.status(200).json({ ...profileData._doc });
+        .lean();
+      return res.status(200).json(profileData);
     }
   } catch (error) {
     console.log("Error while getting profile" + error.message);
@@ -291,16 +304,98 @@ export const updateProfile = async (req, res) => {
   }
 };
 
-export const getAdminUsers = async (req, res) => {
+export const getUsers = async (req, res) => {
+  const { role } = req.params;
   const { id } = req.user;
+
   try {
-    const adminUsers = await User.find({
-      role: "admin",
+    const users = await User.find({
+      role: role,
       _id: { $ne: id },
     });
-    return res.status(200).json({ success: true, adminUsers });
+    return res.status(200).json({ success: true, users });
   } catch (error) {
     console.log("Error coming while fetching admins" + error.message);
     res.status(500).json({ message: error.message });
+  }
+};
+
+export const subscribeEmail = async (req, res) => {
+  try {
+    const loggedInUser = req.user;
+    const email = req.user.email;
+
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        message: "Email is required!",
+      });
+    }
+
+    if (loggedInUser.isSubscribed) {
+      return res.status(400).json({
+        success: false,
+        message: "You are already subscribed!",
+      });
+    }
+
+    const user = await User.findByIdAndUpdate(
+      { _id: loggedInUser._id },
+      { isSubscribed: true },
+      { new: true }
+    );
+
+    sendSubscribedEmail(email);
+
+    return res.json({
+      success: true,
+      user,
+      message: "Email Subscribed Successfully!",
+    });
+  } catch (error) {
+    console.log("Error coming while subscribing email", error.message);
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+export const unsubscribeEmail = async (req, res) => {
+  try {
+    const loggedInUser = req.user;
+    const email = req.user.email;
+
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        message: "Email is required!",
+      });
+    }
+
+    if (!loggedInUser.isSubscribed) {
+      return res.status(400).json({
+        success: false,
+        message: "You are already Unsubscribed!",
+      });
+    }
+
+    const user = await User.findByIdAndUpdate(
+      { _id: loggedInUser._id },
+      { isSubscribed: false },
+      { new: true }
+    );
+
+    return res.json({
+      success: true,
+      user,
+      message: "Email Unsubscribed Successfully!",
+    });
+  } catch (error) {
+    console.log("Error coming while Unsubscribing email", error.message);
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
   }
 };

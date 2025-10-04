@@ -1,17 +1,25 @@
-import { useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 import useEventStore from "../stores/eventStore";
 import React, { useEffect } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { CalendarDays, Loader2, MapPin, User } from "lucide-react";
-import {Link} from 'react-router-dom'
+import { Link } from "react-router-dom";
 
 const SingleEventPage = () => {
   const { eventId } = useParams();
   const { event, isEventFetched, getSingleEvent } = useEventStore();
+  const navigate = useNavigate();
+
+  async function fetchSingleEvent() {
+    const isSuccess = await getSingleEvent(eventId);
+    if (!isSuccess) {
+      navigate("/events");
+    }
+  }
 
   useEffect(() => {
-    getSingleEvent(eventId);
+    fetchSingleEvent(eventId);
   }, []);
 
   const formatDate = (dateString) => {
@@ -53,11 +61,17 @@ const SingleEventPage = () => {
                       {event.title}
                     </h1>
                     {event.registrationUrl ? (
-                      <Link target="_blank" to={event.registrationUrl} className="bg-primary-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-primary-600 hover:bg-primary-300">
+                      <Link
+                        target="_blank"
+                        to={event.registrationUrl}
+                        className="bg-primary-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-primary-600 hover:bg-primary-300"
+                      >
                         Register Now
                       </Link>
                     ) : (
-                      <div className="bg-gray-300 text-neutral-600 px-4 py-2 rounded-md">No Registration Yet</div>
+                      <div className="bg-gray-300 text-neutral-600 px-4 py-2 rounded-md">
+                        No Registration Yet
+                      </div>
                     )}
                   </div>
 
@@ -73,6 +87,19 @@ const SingleEventPage = () => {
                       <span className="font-medium">{event.location}</span>
                     </div>
                   </div>
+
+                  {event.category.length > 0 && (
+                    <ul className="flex flex-wrap items-center gap-2">
+                      {event.category.map((text) => (
+                        <li
+                          key={text}
+                          className="px-2.5 py-1 rounded-sm bg-primary-500 text-white text-sm"
+                        >
+                          {text}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
 
                   <p className="text-gray-700 leading-relaxed">
                     {event.description}

@@ -109,7 +109,7 @@ const LoginPage = () => {
 
           <button
             type="submit"
-            className="flex justify-center items-center gap-1.5 w-full text-primary-500 border-2 rounded-md py-2 mt-2 border-primary-500 bg-transparent hover:bg-primary-500 hover:text-white hover:border-primary-500"
+            className="flex justify-center items-center gap-1.5 w-full text-white border-2 rounded-md py-2 mt-2 border-primary-500 bg-primary-500 hover:bg-white hover:text-primary-500 hover:border-primary-500"
             disabled={isUserAuthenticating}
           >
             {isUserAuthenticating ? (

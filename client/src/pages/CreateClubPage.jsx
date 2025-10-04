@@ -25,26 +25,28 @@ const CreateClubPage = () => {
 
   const fileInputRef = useRef(null);
 
-  const { isAdminUsersFetched, getAdminUsers } = useAuthStore();
+  const { isFetchingUsers, getUsers } = useAuthStore();
   const { isCreatingClub, createNewClub } = useClubStore();
 
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setShowDropdown(false);
-      }
-    };
-    const fetchAdminUsers = async () => {
-      const adminUsers = await getAdminUsers();
-      setAdminUsers(adminUsers);
-    };
-    fetchAdminUsers();
+    fetchUsers("admin");
     document.addEventListener("mousedown", handleClickOutside);
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  const fetchUsers = async (role) => {
+    const users = await getUsers(role);
+    setAdminUsers(users);
+  };
+
+  const handleClickOutside = (event) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setShowDropdown(false);
+    }
+  };
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -123,7 +125,7 @@ const CreateClubPage = () => {
       };
 
       await createNewClub(data);
-      navigate("/dashboard", {state: {activeTab: "clubs"}});
+      navigate("/dashboard", { state: { activeTab: "clubs" } });
     }
   };
 
@@ -185,7 +187,7 @@ const CreateClubPage = () => {
                     )}
                   </div>
 
-                  {showDropdown && isAdminUsersFetched && (
+                  {showDropdown && !isFetchingUsers && (
                     <ul className="absolute z-10 flex flex-col gap-0.5 top-full left-0 w-full bg-primary-50 shadow-md border border-gray-200 rounded-md mt-1 overflow-y-auto">
                       {adminUsers.map((user) => (
                         <li key={user._id}>

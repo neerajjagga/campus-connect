@@ -1,12 +1,13 @@
 import toast from "react-hot-toast";
 import axiosInstance from "../utils/axios";
 import { create } from "zustand";
+import useChatStore from "./chatStore";
 
 const useAuthStore = create((set) => ({
   authUser: JSON.parse(window.localStorage.getItem("authUser")) || null,
   isUserAuthenticating: false,
   isCheckingAuth: false,
-  isAdminUsersFetched: false,
+  isFetchingUsers: false,
   isLoading: false,
 
   setAuthUser: (data) => {
@@ -20,6 +21,7 @@ const useAuthStore = create((set) => ({
       const res = await axiosInstance.get("/auth/check");
       set({ authUser: res.data });
       window.localStorage.setItem("authUser", JSON.stringify(res.data));
+      useChatStore.getState().connectSocket();
     } catch (error) {
       set({ authUser: null });
       window.localStorage.setItem("authUser", null);
@@ -33,7 +35,8 @@ const useAuthStore = create((set) => ({
     try {
       const res = await axiosInstance.post("/auth/login", data);
       set({ authUser: res.data.user });
-      window.localStorage.setItem("authUser", JSON.stringify(res.data));
+      window.localStorage.setItem("authUser", JSON.stringify(res.data.user));
+      useChatStore.getState().connectSocket();
       toast.success("Login Success!");
     } catch (error) {
       toast.error(error.response.data.message);
@@ -46,7 +49,8 @@ const useAuthStore = create((set) => ({
     try {
       const res = await axiosInstance.post("/auth/signup", data);
       set({ authUser: res.data.user });
-      window.localStorage.setItem("authUser", JSON.stringify(res.data));
+      window.localStorage.setItem("authUser", JSON.stringify(res.data.user));
+      useChatStore.getState().connectSocket();
       toast.success("Account Created Success!");
     } catch (error) {
       toast.error(error.response.data.message);
@@ -60,27 +64,31 @@ const useAuthStore = create((set) => ({
       await axiosInstance.post("/auth/logout");
       set({ authUser: null });
       window.localStorage.setItem("authUser", null);
+      useChatStore.getState().disconnectSocket();
       toast.success("Logout Success!");
     } catch (error) {
+      console.log(error);
       toast.error(error.response.data.message);
     }
   },
 
-  getAdminUsers: async () => {
+  getUsers: async (role) => {
+    set({ isFetchingUsers: true });
     try {
-      const res = await axiosInstance.get("/auth/admins");
-      set({ isAdminUsersFetched: true });
-      return res.data.adminUsers;
+      const res = await axiosInstance.get(`/auth/users/${role}`);
+      return res.data.users;
     } catch (error) {
       toast.error(error.response.data.message);
+    } finally {
+      set({ isFetchingUsers: false });
     }
   },
 
   subscribeEmail: async () => {
     set({ isLoading: true });
     try {
-      const res = await axiosInstance.post("/subscribe");
-      set({authUser: res.data.user});
+      const res = await axiosInstance.post("/auth/subscribe");
+      set({ authUser: res.data.user });
       window.localStorage.setItem("authUser", JSON.stringify(res.data.user));
       toast.success(res.data.message);
     } catch (error) {
@@ -93,8 +101,8 @@ const useAuthStore = create((set) => ({
   unsubscribeEmail: async () => {
     set({ isLoading: true });
     try {
-      const res = await axiosInstance.delete("/subscribe");
-      set({authUser: res.data.user});
+      const res = await axiosInstance.delete("/auth/unsubscribe");
+      set({ authUser: res.data.user });
       window.localStorage.setItem("authUser", JSON.stringify(res.data.user));
       toast.success(res.data.message);
     } catch (error) {

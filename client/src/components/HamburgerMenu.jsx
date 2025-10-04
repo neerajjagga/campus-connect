@@ -9,6 +9,7 @@ import {
 } from "./ui/sheet";
 import { navLinks } from "../utils/constant";
 import useAuthStore from "../stores/authStore";
+import { Link } from "react-router-dom";
 
 const HamburgerMenu = ({ active }) => {
   const { authUser } = useAuthStore();
@@ -29,8 +30,8 @@ const HamburgerMenu = ({ active }) => {
         <ul className="flex flex-col gap-3 capitalize text-[0.95rem]">
           {navLinks.map((link) => (
             <li key={link.id}>
-              <a
-                href={`${link.path}`}
+              <Link
+                to={`${link.path}`}
                 className={`relative group text-black transition duration-200 ${
                   link.label.toLowerCase() === active ? "text-primary-500" : ""
                 } hover:text-primary-500`}
@@ -43,7 +44,7 @@ const HamburgerMenu = ({ active }) => {
                   }`}
                 ></span>
                 {link.label}
-              </a>
+              </Link>
             </li>
           ))}
         </ul>

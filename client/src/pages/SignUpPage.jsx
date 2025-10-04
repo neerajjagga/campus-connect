@@ -36,10 +36,6 @@ const SignUpPage = () => {
 
   const { isUserAuthenticating, signup } = useAuthStore();
 
-  useEffect(() => {
-    console.log(formData);
-  }, [formData]);
-
   const handleImageChange = (e) => {
     const file = e.target.files[0];
 
@@ -337,7 +333,7 @@ const SignUpPage = () => {
 
           <button
             type="submit"
-            className="flex justify-center items-center gap-1.5 w-full text-primary-500 border-2 rounded-md py-2 mt-5 border-primary-500 bg-transparent hover:bg-primary-500 hover:text-white hover:border-primary-500"
+            className="flex justify-center items-center gap-1.5 w-full text-white border-2 rounded-md py-2 mt-5 border-primary-500 bg-primary-500 hover:bg-white hover:text-primary-500 hover:border-primary-500"
             disabled={isUserAuthenticating}
           >
             {isUserAuthenticating ? (

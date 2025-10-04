@@ -58,10 +58,6 @@ const EditEventPage = () => {
     }
   }, [event]);
 
-  useEffect(() => {
-    console.log(profileData);
-  }, [profileData]);
-
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -279,6 +275,7 @@ const EditEventPage = () => {
                   value={formData.date}
                   onChange={handleChange}
                   required
+                  min={new Date().toISOString().split("T")[0]}
                 />
               </div>
 

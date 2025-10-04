@@ -66,9 +66,7 @@ export const createEvent = async (req, res) => {
     await admin.save();
     
     // run an async task to notify all the subscribe users about the event
-    sendEventEmail(event).catch((error) => {
-      console.error("Failed to send emails:", error);
-    });
+    sendEventEmail(event);
 
     return res.status(201).json({
       success: true,

@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import useClubStore from "../stores/clubStore";
 import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
@@ -9,10 +9,8 @@ import {
   CalendarDays,
   UserPlus,
   UserCheck,
-  MessageCircle,
 } from "lucide-react";
 import useAuthStore from "../stores/authStore";
-import SelectChatAdminModal from "../components/SelectChatAdminModal";
 
 const SingleClubPage = () => {
   const { clubId } = useParams();
@@ -20,23 +18,28 @@ const SingleClubPage = () => {
   const { club, isClubFetched, getSingleClub, followClub, unfollowClub } =
     useClubStore();
 
-  const [clubFollowingUsersCount, setClubFollowingUsersCount] = useState(null);
+  const navigate = useNavigate();
 
   const [isFollowing, setIsFollowing] = useState(
     authUser.followingClubs.map((club) => club._id).includes(clubId)
   );
 
   const [isLoadingClub, setIsLoadingClub] = useState(false);
-  const [showSelectChatAdminModal, setShowSelectChatAdminModal] = useState(false);
+
+  async function fetchSingleClub() {
+    const isSuccess = await getSingleClub(clubId);
+    if (!isSuccess) {
+      navigate("/clubs");
+    }
+  }
 
   useEffect(() => {
-    getSingleClub(clubId);
+    fetchSingleClub();
   }, []);
 
   useEffect(() => {
     if (club) {
       setIsFollowing(club.followers.some((user) => user._id === authUser._id));
-      setClubFollowingUsersCount(club.followers.length);
     }
   }, [club]);
 
@@ -55,10 +58,8 @@ const SingleClubPage = () => {
     try {
       if (isFollowing) {
         await unfollowClub(clubId);
-        setClubFollowingUsersCount((prev) => prev - 1);
       } else {
         await followClub(clubId);
-        setClubFollowingUsersCount((prev) => prev + 1);
       }
       setIsFollowing((prev) => !prev);
     } finally {
@@ -70,7 +71,6 @@ const SingleClubPage = () => {
     <>
       <Header />
       <main>
-        {showSelectChatAdminModal && <SelectChatAdminModal setShowSelectChatAdminModal={setShowSelectChatAdminModal} clubName={club.name} admins={club.admins} />}
         <div className="w-full max-w-[72rem] py-8 px-6 mx-auto md:px-10">
           <div className="min-h-[65vh] rounded-md shadow-md border-[1px]">
             {isClubFetched ? (
@@ -119,10 +119,6 @@ const SingleClubPage = () => {
                           </>
                         )}
                       </button>
-                      {/* <Link to={''} className="px-4 py-2 text-sm font-semibold rounded-md flex items-center gap-2 border-2 bg-primary-500 text-white border-primary-500 hover:bg-primary-300 hover:border-primary-300">
-                        <MessageCircle className="size-5" />
-                        <span>Chat</span>
-                      </Link> */}
                     </div>
                   </div>
                   <p className="text-gray-700 text-md leading-relaxed">
@@ -135,9 +131,28 @@ const SingleClubPage = () => {
                         <Users className="w-5 h-5 text-primary-500" />
                         Followers
                       </h3>
-                      <p className="text-gray-600">
-                        {clubFollowingUsersCount} Members
-                      </p>
+                      <ul className="flex flex-col gap-2 text-gray-600 text-sm">
+                        {club.followers.length > 0 ? (
+                          club.followers.map((user) => (
+                            <li
+                              key={user._id}
+                              className="flex items-center gap-2 p-1.5 border rounded-sm"
+                            >
+                              <img
+                                src={
+                                  user.profileImageUrl ||
+                                  "../assets/images/avatar.png"
+                                }
+                                alt={user.name}
+                                className="size-8 rounded-full border border-primary-500"
+                              />
+                              {user.name}
+                            </li>
+                          ))
+                        ) : (
+                          <p>No Followers</p>
+                        )}
+                      </ul>
                     </div>
 
                     <div className="bg-gray-100 p-5 rounded-md shadow flex flex-col gap-2.5">

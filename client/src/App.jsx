@@ -17,17 +17,15 @@ import SingleClubPage from "./pages/SingleClubPage";
 import EditEventPage from "./pages/EditEventPage";
 import EditClubPage from "./pages/EditClubPage";
 import ChatPage from "./pages/ChatPage";
+import useChatStore from "./stores/chatStore";
 
 const App = () => {
   const { isCheckingAuth, authUser, checkAuth } = useAuthStore();
+  const {messages} = useChatStore();
 
   useEffect(() => {
     checkAuth();
   }, []);
-
-  useEffect(() => {
-    console.log(isCheckingAuth, authUser);
-  }, [isCheckingAuth]);
 
   if (isCheckingAuth) {
     return (

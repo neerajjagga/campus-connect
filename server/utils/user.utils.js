@@ -5,7 +5,7 @@ dotenv.config();
 
 export const generateTokens = (userId) => {
     const accessToken = jwt.sign({ userId }, process.env.ACCESS_TOKEN_SECRET, {
-        expiresIn: "15m"
+        expiresIn: "60m"
     })
 
     const refreshToken = jwt.sign({ userId }, process.env.REFRESH_TOKEN_SECRET, {
@@ -20,7 +20,7 @@ export const setCookies = (accessToken, refreshToken, res) => {
         secure: process.env.NODE_ENV === "production",
         httpOnly: true,
         sameSite: "strict",
-        maxAge: 15 * 60 * 1000,
+        maxAge: 60 * 60 * 1000,
     })
 
     res.cookie("refresh_token", refreshToken, {

@@ -238,6 +238,7 @@ const CreateEventPage = () => {
                   value={formData.date}
                   onChange={handleChange}
                   required
+                  min={new Date().toISOString().split("T")[0]}
                 />
               </div>
 

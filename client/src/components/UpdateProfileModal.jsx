@@ -36,7 +36,7 @@ const UpdateProfileModal = ({ handleClick }) => {
 
     const validTypes = ["image/png", "image/jpeg", "image/jpg", "image/webp"];
     if (!validTypes.includes(file.type)) {
-      alert("Only png, jpg, jpeg and webp images are allowed.");
+      toast.error("Only png, jpg, jpeg and webp images are allowed.");
       return;
     }
 

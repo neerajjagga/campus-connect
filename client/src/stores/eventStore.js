@@ -29,8 +29,10 @@ const useEventStore = create((set) => ({
     try {
       const res = await axiosInstance.get(`/events/${eventId}`);
       set({ event: res.data.event, isEventFetched: true });
+      return true;
     } catch (error) {
       toast.error(error.response.data.message);
+      return false;
     }
   },
 

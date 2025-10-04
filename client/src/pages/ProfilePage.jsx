@@ -11,10 +11,11 @@ const ProfilePage = () => {
 
   const [showUpdateProfileModal, setShowUpdateProfileModal] = useState(false);
 
+  const fetchProfile = async () => {
+    await getProfile();
+  };
+
   useEffect(() => {
-    const fetchProfile = async () => {
-      await getProfile();
-    };
     fetchProfile();
   }, []);
 
