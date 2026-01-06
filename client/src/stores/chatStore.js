@@ -18,7 +18,7 @@ const useChatStore = create((set, get) => ({
 
     if (!authUser || get().socket) return;
 
-    const baseUrl = import.meta.env.MODE === "development" ? `wss://localhost:3000?userId=${authUser._id}` : `ws://campus-connect-twh4.onrender.com?userId=${authUser._id}`
+    const baseUrl = `wss://campus-connect-twh4.onrender.com?userId=${authUser._id}`;
 
     const socket = new WebSocket(`ws://localhost:3000?userId=${authUser._id}`);
 
